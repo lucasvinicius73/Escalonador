@@ -10,33 +10,33 @@ int main(){
 	int prog;
 	Lista* mem;
 	Lista* progs;
-	int i=0;
+	int i;
     srand(time(NULL));
     
     mem = lst_cria();
     progs = lst_cria();
     
-  mem =  lst_insere(mem, 3);
-  mem =  lst_insere(mem, 5);
-  mem =  lst_insere(mem, 10);
-  mem =  lst_insere(mem, 10);
-  mem =  lst_insere(mem, 15);
-  mem =  lst_insere(mem, 15);
+  mem =  lst_insere(mem, 3,1);
+  mem =  lst_insere(mem, 5,2);
+  mem =  lst_insere(mem, 10,3);
+  mem =  lst_insere(mem, 8,4);
+  mem =  lst_insere(mem, 15,5);
+  mem =  lst_insere(mem, 13,6);
     
     lst_imprime_mem(mem);
     
   printf("Insira quantidades de Programas: ");
   scanf("%d",&prog);
     
-    for(i; i < prog; i++){
+    for(i=0; i < prog; i++){
     	int v = (rand()%14)+1;
-    	progs = lst_insere(progs,v);
+    	progs = lst_insere(progs,v,i+1);
 	}
 	
 	lst_imprime(progs);	
 	
 	alocar(progs,mem,prog);
-	
+	lst_imprime_mem(mem);	
 	/*for(i=0;i<prog;i++){
 		int best = 15;
 		int aux1, resto;

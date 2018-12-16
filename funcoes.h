@@ -8,7 +8,7 @@ typedef struct lista Lista;
 Lista* lst_cria();
 
 
-Lista* lst_insere(Lista* l, int i);
+Lista* lst_insere(Lista* l, int i,int id);
 
 void lst_imprime(Lista* l);
 

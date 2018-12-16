@@ -6,6 +6,7 @@
 struct lista {		
 	int info;
 	int id;
+	int est;
 	struct lista* prox;
 };
 
@@ -13,7 +14,7 @@ Lista* lst_cria() {
 	return NULL;	
 }
 
-Lista* lst_insere(Lista* l, int i) {
+Lista* lst_insere(Lista* l, int i,int id) {
 	Lista* novo = (Lista*) malloc(sizeof(Lista));
 	if( novo == NULL ) {							
 		printf("Memoria insuficiente!\n");			
@@ -21,7 +22,8 @@ Lista* lst_insere(Lista* l, int i) {
 	}
 	novo->info = i;									
 	novo->prox = l;
-	novo->id = 0;									
+	novo->est = 0;
+	novo->id = id;									
 	return novo;								
 }
 
@@ -29,7 +31,7 @@ void lst_imprime(Lista* l) {
 	Lista* aux;	
 	int i =1;								
 	for(aux = l; aux != NULL; aux = aux->prox) {
-		printf("Prog %2.d | %2.d\n",i,aux->info);
+		printf("Prog %2.d | %2.d ---- %d\n",i,aux->info,aux->id);
 		i++;
 	}
 	printf("\n");
@@ -40,11 +42,11 @@ void lst_imprime_mem(Lista* l) {
 	   	printf("  Memoria \n");								
 	for(aux = l; aux != NULL; aux = aux->prox) {	
 		printf("%2.d ", aux->info);	
-		if(l->id == 0){
-			printf(" | Livre \n");	
+		if(aux->est == 0){
+			printf(" | Livre ---- %d\n",aux->id);	
 		}
 	    else{
-	    		printf(" | Prog %d\n",aux->info);
+	    		printf(" | ocupado ---- %d\n",aux->id);
 		}
 	}
 	printf("\n");
@@ -98,31 +100,37 @@ void lst_libera(Lista* l) {
 void alocar(Lista* progs,Lista* mem, int prog){
 	Lista* auxp;
 	Lista* auxm;
-	int i = 1,best=15,resto,aux,en=0;
-	for(auxp = progs;progs != NULL; auxp=auxp->prox){
-		printf("Alocando programa %2.d:\n",i);
+	int i, best, resto, aux, en,ids;
+	for(auxp = progs; auxp!=NULL; auxp = auxp->prox){
+		best = 16;
+		en = 0;
+		ids=0;
 		for(auxm = mem; auxm!=NULL; auxm = auxm->prox){
-			aux = auxm->info - auxp->info;
-			if(aux <=best&& aux >=0){
-				resto = aux;
+			if((auxm->info<best)&&(auxm->est==0)&&(auxm->info>=auxp->info)){
 				best = auxm->info;
+				aux = auxm->id;
 				en = 1;
 			}
+			ids++;
 		}
-		for(auxm = mem;auxm!=NULL;auxm=auxm->prox){
-			if(auxm->info == best && en==1){
-				auxm->info = auxp->info;
-				auxm->id = 1;
-				Lista* novo = (Lista*) malloc(sizeof(Lista));
-				novo->info = resto;
-				novo->prox = auxm->prox;
-				auxm->prox = novo;
-				novo->id = 0;
-				break;
+		if(en == 1){
+			for(auxm = mem; auxm!=NULL;auxm = auxm->prox){
+				if(auxm->id == aux){
+					resto = auxm->info - auxp->info;
+					if(resto>0){
+						Lista* novo = (Lista*) malloc(sizeof(Lista));
+						novo->prox = auxm->prox;
+						novo->info = resto;
+						novo->est = 0;
+						novo->id = ids+1;
+						auxm->prox = novo;
+					}
+					auxm->info = auxp->info;
+					auxm->est = 1;
+				}
 			}
+		}else{
+			printf("\nMemória não disponível para armazenamento!\n\n");
 		}
-		lst_imprime_mem(auxm);
-		i++;
 	}
 }
-
