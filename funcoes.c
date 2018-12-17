@@ -100,7 +100,7 @@ void lst_libera(Lista* l) {
 void alocar(Lista* progs,Lista* mem, int prog){
 	Lista* auxp;
 	Lista* auxm;
-	int i, best, resto, aux, en,ids;
+	int i, best, resto, aux, en,ids,n=1;
 	for(auxp = progs; auxp!=NULL; auxp = auxp->prox){
 		best = 16;
 		en = 0;
@@ -130,7 +130,8 @@ void alocar(Lista* progs,Lista* mem, int prog){
 				}
 			}
 		}else{
-			printf("\nMemória não disponível para armazenamento!\n\n");
+			printf("\nMemória não disponível para o programa %d!!\n\n",n);
 		}
+		n++;
 	}
 }

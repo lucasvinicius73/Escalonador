@@ -37,21 +37,7 @@ int main(){
 	
 	alocar(progs,mem,prog);
 	lst_imprime_mem(mem);	
-	/*for(i=0;i<prog;i++){
-		int best = 15;
-		int aux1, resto;
-		printf("Alocando programa %2.d: ",i+1);
-		Lista* aux;
-		for(aux=mem;aux!=NULL;aux=aux->prox){
-			aux1 = aux->info - progs->info;
-			if(aux1 < best && aux1 >= 0){
-			  resto = aux1;
-			  best = aux->info;
-			 
-			}
-		}
-		
-	}*/
+
 
 	return 0;
 }
