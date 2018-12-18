@@ -26,6 +26,7 @@ Lista* lst_retira(Lista* l, int valor);
 
 void lst_libera(Lista* l);
 
-void alocar(Lista* progs,Lista* mem, int prog);
+void alocar_best(Lista* progs,Lista* mem);
 
+void alocar_best_average(Lista* progs,Lista* mem);  
 
