@@ -30,3 +30,5 @@ void alocar_best(Lista* progs,Lista* mem);
 
 void alocar_best_average(Lista* progs,Lista* mem);  
 
+Lista* copia(Lista* mem);
+

@@ -1,6 +1,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 #include "funcoes.h"
 
 struct lista {		
@@ -31,7 +32,7 @@ void lst_imprime(Lista* l) {
 	Lista* aux;	
 	int i =1;								
 	for(aux = l; aux != NULL; aux = aux->prox) {
-		printf("Prog %2.d | %2.d ---- %d\n",i,aux->info,aux->id);
+		printf("Prog %2.d Kb | %2.d ---- %d\n",i,aux->info,aux->id);
 		i++;
 	}
 	printf("\n");
@@ -41,7 +42,7 @@ void lst_imprime_mem(Lista* l) {
 	Lista* aux;	
 	   	printf("  Memoria \n");								
 	for(aux = l; aux != NULL; aux = aux->prox) {	
-		printf("%2.d ", aux->info);	
+		printf("%2.d Kb", aux->info);	
 		if(aux->est == 0){
 			printf(" | Livre ---- %d\n",aux->id);	
 		}
@@ -102,6 +103,7 @@ void alocar_best(Lista* progs,Lista* mem){
 	Lista* auxm;
 	int i, best, resto, aux, en,ids,n=1;
 	for(auxp = progs; auxp!=NULL; auxp = auxp->prox){
+		printf("\n Alocando programa %d:\n",n);
 		best = 16;
 		en = 0;
 		ids=0;
@@ -133,6 +135,7 @@ void alocar_best(Lista* progs,Lista* mem){
 		}else{
 			printf("\nMemória não disponível para o programa %d!!\n\n",n);
 		}
+		lst_imprime_mem(mem);
 		n++;
 	}
 }
@@ -140,8 +143,10 @@ void alocar_best(Lista* progs,Lista* mem){
 void alocar_best_average(Lista* progs,Lista* mem){
 	Lista* auxp;
 	Lista* auxm;
-	int i, best, resto, aux, en,ids,n=1,soma,media,q;
+	int i, resto, aux, en,ids,n=1,o,comp;
+	float media,best,soma,q;
 	for(auxp = progs; auxp!=NULL; auxp = auxp->prox){
+		printf("\n Alocando programa %d:\n",n);
 		best = 16;
 		en = 0;
 		ids=0;
@@ -153,6 +158,7 @@ void alocar_best_average(Lista* progs,Lista* mem){
 			}
 			ids++;
 		}
+		comp = best;
 		if(en == 1){
 			for(auxm = mem; auxm!=NULL;auxm = auxm->prox){
 				if(auxm->id == aux){
@@ -170,61 +176,60 @@ void alocar_best_average(Lista* progs,Lista* mem){
 						auxm->est = 1;
 						break;
 					}else{
-						break;
-					}
-				}
-			}
-			printf("arroto\n\n");
-			if(resto<1&&resto!=0){
-				soma = 0;
-				media = 0;
-				q = 0;
-				aux = 1;
-				best = 0;
-				for(auxm = mem; auxm!=NULL;auxm=auxm->prox){
-					if((auxm->info <= auxp->info) && (auxm->est == 0)){
-						soma += auxm->info;
-						q++;
-					}
-				}
-				printf("boboca\n\n");
-				media = soma/q;
-				for(auxm = mem; auxm!=NULL;auxm=auxm->prox){
-					if((auxm->info <= auxp->info) && (auxm->est ==0)&&(auxm->info >= auxp->info)){
-						if(aux == 1){
-							best = abs(media - auxm->info);
-							q = auxm->id;
-						}else{
-							if(abs(media - auxm->info)<best){
-								best = abs(media - auxm->info);
-								q = auxm->id;
-							}
-						}
-					}else{
-						printf("\nNão tem!!!\n");
-					}
-					aux++;
-				}
-				for(auxm = mem; auxm != NULL; auxm = auxm->prox){
-					if(q == auxm->id){
-						resto = auxm->info - auxp->info;
-						if(resto>0){
-						Lista* novo = (Lista*) malloc(sizeof(Lista));
-						novo->prox = auxm->prox;
-						novo->info = resto;
-						novo->est = 0;
-						novo->id = ids+1;
-						auxm->prox = novo;
-					}
-					auxm->info = auxp->info;
-					auxm->est = 1;
-					break;
+						en = 2;
 					}
 				}
 			}
 		}else{
 			printf("\nMemória não disponível para o programa %d!!\n\n",n);
 		}
+		if(en == 2){
+			soma = 0;
+			media = 0.0;
+			q = 0;
+			aux = 1;
+			best = 0;
+			for(auxm = mem; auxm!=NULL;auxm=auxm->prox){
+				if((auxm->info >= auxp->info) && (auxm->est == 0)){
+					soma =soma + auxm->info;
+					q++;
+				}
+			}
+			media = soma/q;
+			printf("A média é %.1f\n",media);
+			for(auxm = mem; auxm != NULL; auxm = auxm->prox){
+				if((auxm->info >= auxp->info) && (auxm->est == 0)){
+					if((aux == 1)){
+						best = fabs(media - auxm->info);
+						o = auxm->id;
+					}else{
+						if(fabs(media - auxm->info) < best){
+							best = fabs(media - auxm->info);
+							o = auxm->id;
+						}
+					}
+					aux++;
+				}
+			}
+			
+			for(auxm = mem; auxm != NULL; auxm = auxm->prox){
+				if(o == auxm->id){
+					resto = auxm->info - auxp->info;
+					if(resto>0){
+					Lista* novo = (Lista*) malloc(sizeof(Lista));
+					novo->prox = auxm->prox;
+					novo->info = resto;
+					novo->est = 0;
+					novo->id = ids+1;
+					auxm->prox = novo;
+				}
+				auxm->info = auxp->info;
+				auxm->est = 1;
+				break;
+				}
+			}
+		}
+		lst_imprime_mem(mem);
 		n++;
 	}
 }
