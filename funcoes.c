@@ -32,7 +32,7 @@ void lst_imprime(Lista* l) {
 	Lista* aux;	
 	int i =1;								
 	for(aux = l; aux != NULL; aux = aux->prox) {
-		printf("Prog %2.d Kb | %2.d ---- %d\n",i,aux->info,aux->id);
+		printf("Prog %2.d | %2.d Kb\n",i,aux->info,aux->id);
 		i++;
 	}
 	printf("\n");
@@ -44,10 +44,10 @@ void lst_imprime_mem(Lista* l) {
 	for(aux = l; aux != NULL; aux = aux->prox) {	
 		printf("%2.d Kb", aux->info);	
 		if(aux->est == 0){
-			printf(" | Livre ---- %d\n",aux->id);	
+			printf(" | Livre\n",aux->id);	
 		}
 	    else{
-	    		printf(" | ocupado ---- %d\n",aux->id);
+	    		printf(" | ocupado\n",aux->id);
 		}
 	}
 	printf("\n");
